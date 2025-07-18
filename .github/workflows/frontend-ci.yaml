@@ -25,6 +25,7 @@ jobs:
       - name: Build Go Binary
         working-directory: .
         run: |
+          ls -la
           go mod tidy
           go build -o app  
 
