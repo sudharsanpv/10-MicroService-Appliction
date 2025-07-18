@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "VERSION=${{ steps.tag_version.outputs.new_tag }}" >> $GITHUB_ENV
 
-      # ✅ Build and Push Docker Image
+      # ✅ Build and Push Docker Image with new tag
       - name: Build Docker image
         run: |
           cd src/frontend
