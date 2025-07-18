@@ -63,9 +63,10 @@ jobs:
 
 
       - name: Build Docker image with semantic version
-        working-directory: src/frontend
+        
         run: |
+          cd src/frontend
           IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ env.VERSION }}
-           docker build -t $IMAGE_URI -f src/frontend/Dockerfile src/frontend
+          docker build -t $IMAGE_URI -f 
           docker push $IMAGE_URI
           echo "Pushed image: $IMAGE_URI"
