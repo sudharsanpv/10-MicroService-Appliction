@@ -54,6 +54,14 @@ jobs:
           echo "::set-output name=version::$VERSION"
         shell: bash
 
+      - name: Debug path
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+          ls -la src/
+          ls -la src/frontend/
+
+
       - name: Build Docker image with semantic version
         working-directory: src/frontend
         run: |
