@@ -1,0 +1,40 @@
+
+name: Build, tag, push docker image
+on:
+  push:
+    branches:
+      - stage
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.19
+
+      - name: Build Go Binary
+        run: |
+          go mod tidy
+          go build -o app  
+
+      - name: upload binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: ./app
+      - name: Extract semantic version
+        id: semver
+        run: |
+          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Image version will be: $VERSION"
+
+      - name: Build Docker image with semantic version
+        run: |
+          docker build -t myapp:${{ env.VERSION }} 
+          
