@@ -23,7 +23,7 @@ jobs:
           go-version: 1.19
 
       - name: Build Go Binary
-        working-directory: ./src
+        working-directory: ./frontend
         run: |
           ls -la
           go mod tidy
@@ -32,8 +32,8 @@ jobs:
       - name: upload binary
         uses: actions/upload-artifact@v4
         with:
-          name: app
-          path: .src/app
+          name: frontend
+          path: .frontend/app
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -57,6 +57,6 @@ jobs:
       - name: Build Docker image with semantic version
         run: |
           IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ env.VERSION }}
-          docker build -t $IMAGE_URI .
+          docker build -t $IMAGE_URI frontend/Dockerfile frontend
           docker push $IMAGE_URI
           echo "Pushed image: $IMAGE_URI"
