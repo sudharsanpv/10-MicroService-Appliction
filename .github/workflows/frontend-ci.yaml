@@ -23,6 +23,7 @@ jobs:
           go-version: 1.19
 
       - name: Build Go Binary
+        working-directory: .
         run: |
           go mod tidy
           go build -o app  
