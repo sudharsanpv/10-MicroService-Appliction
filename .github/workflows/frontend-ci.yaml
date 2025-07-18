@@ -5,9 +5,8 @@ on:
     branches:
       - stage
 env:
-  IMAGE_NAME: go-app
-  
-        
+  IMAGE_NAME: go-app-frontend
+       
 
 jobs:
   build:
@@ -17,6 +16,7 @@ jobs:
     steps:
       - name: checkout code
         uses: actions/checkout@v2
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -54,13 +54,7 @@ jobs:
           echo "::set-output name=version::$VERSION"
         shell: bash
 
-      - name: Debug path
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -la
-          ls -la src/
-          ls -la src/frontend/
-
+    
 
       - name: Build Docker image with semantic version
         
