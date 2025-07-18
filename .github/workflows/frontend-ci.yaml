@@ -4,10 +4,15 @@ on:
   push:
     branches:
       - stage
+env:
+  IMAGE_NAME: go-app
+  
+        
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
 
     steps:
       - name: checkout code
@@ -23,18 +28,33 @@ jobs:
           go build -o app  
 
       - name: upload binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app
           path: ./app
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}  
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1    
+
       - name: Extract semantic version
         id: semver
         run: |
           VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0")
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Image version will be: $VERSION"
+          echo "::set-output name=version::$VERSION"
+        shell: bash
 
       - name: Build Docker image with semantic version
         run: |
-          docker build -t myapp:${{ env.VERSION }} 
-          
+          IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ env.VERSION }}
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo "Pushed image: $IMAGE_URI"
