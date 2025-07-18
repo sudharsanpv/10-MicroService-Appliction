@@ -58,6 +58,6 @@ jobs:
         working-directory: src/frontend
         run: |
           IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ env.VERSION }}
-          docker build -t $IMAGE_URI frontend/Dockerfile frontend
+           docker build -t $IMAGE_URI -f src/frontend/Dockerfile src/frontend
           docker push $IMAGE_URI
           echo "Pushed image: $IMAGE_URI"
