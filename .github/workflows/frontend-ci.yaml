@@ -10,7 +10,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
 
 
     steps:
@@ -54,7 +54,7 @@ jobs:
           echo "::set-output name=version::$VERSION"
         shell: bash
 
-    
+  
 
       - name: Build Docker image with semantic version
         
